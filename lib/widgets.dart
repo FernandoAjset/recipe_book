@@ -1,0 +1,1 @@
+export 'recipe/ui/widgets/card_widget.dart';

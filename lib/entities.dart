@@ -1,0 +1,1 @@
+export 'recipe/domain/entities/recipe.dart';
