@@ -69,34 +69,48 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               },
             ),
             Expanded(
-              child: recipesState.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) =>
-                    const Center(child: Text('Error loading recipes')),
-                data: (recipes) {
-                  final filtered = recipes
-                      .where((r) =>
-                          r.recipeName.toLowerCase().contains(searchQuery))
-                      .toList();
-                  return ListView.builder(
-                    itemCount: filtered.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RecipeDetialScreen(recipe: filtered[index]),
-                            ),
-                          );
-                        },
-                        // onTap: () => _showRecipeForm(context, recipe: filtered[index]),
-                        child: RecipeCard(recipe: filtered[index]),
-                      );
-                    },
-                  );
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref.read(recipeProvider.notifier).loadRecipes();
                 },
+                child: recipesState.when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (error, stackTrace) =>
+                      const Center(child: Text('Error loading recipes')),
+                  data: (recipes) {
+                    if (recipesState.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final filtered = recipes
+                        .where((r) =>
+                            r.recipeName.toLowerCase().contains(searchQuery))
+                        .toList();
+                    if (filtered.isEmpty) {
+                      return const Center(
+                        child: Text('No recipes found'),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: filtered.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RecipeDetialScreen(recipe: filtered[index]),
+                              ),
+                            );
+                          },
+                          child: RecipeCard(recipe: filtered[index]),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],

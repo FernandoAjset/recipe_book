@@ -7,6 +7,8 @@ import '../../../repositories.dart';
 // Notifier
 class RecipeNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
   final RecipeRepository repository;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
 
   RecipeNotifier(this.repository) : super(const AsyncValue.loading()) {
     loadRecipes();
@@ -14,10 +16,16 @@ class RecipeNotifier extends StateNotifier<AsyncValue<List<Recipe>>> {
 
   Future<void> loadRecipes() async {
     try {
+      if (_isLoading) return; // Evita cargas múltiples
+      _isLoading = true;
+      state = const AsyncValue.loading(); // Establece el estado en loading
+      await Future.delayed(const Duration(seconds: 3)); // Simular espera
       final recipes = await repository.getRecipes();
       state = AsyncValue.data(recipes);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
+    } finally {
+      _isLoading = false;
     }
   }
 }
