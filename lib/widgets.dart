@@ -1,3 +1,4 @@
 export 'recipe/ui/widgets/card_widget.dart';
-export 'home/ui/widgets/custom_bottom_navigation.dart';
-export 'home/ui/widgets/search_bar.dart';
+export 'shared/widgets/custom_bottom_navigation.dart';
+export 'shared/widgets/search_bar.dart';
+export 'shared/widgets/image_input.dart';

@@ -4,6 +4,7 @@ class Recipe {
   final String imageUrl;
   final String time;
   final int servings;
+  final String description;
 
   const Recipe({
     required this.recipeName,
@@ -11,6 +12,7 @@ class Recipe {
     required this.imageUrl,
     required this.time,
     required this.servings,
+    this.description = '',
   });
 
   Recipe copyWith({
@@ -19,6 +21,7 @@ class Recipe {
     String? imageUrl,
     String? time,
     int? servings,
+    String? description,
   }) {
     return Recipe(
       recipeName: recipeName ?? this.recipeName,
@@ -26,6 +29,7 @@ class Recipe {
       imageUrl: imageUrl ?? this.imageUrl,
       time: time ?? this.time,
       servings: servings ?? this.servings,
+      description: description ?? this.description,
     );
   }
 
@@ -36,6 +40,7 @@ class Recipe {
       imageUrl: json['imageUrl'] ?? '',
       time: json['time'] ?? '',
       servings: json['servings'] ?? 0,
+      description: json['description'] ?? '',
     );
   }
 
@@ -46,6 +51,7 @@ class Recipe {
       'imageUrl': imageUrl,
       'time': time,
       'servings': servings,
+      'description': description,
     };
   }
 }
